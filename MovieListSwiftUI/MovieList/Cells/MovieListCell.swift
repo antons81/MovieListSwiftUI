@@ -64,8 +64,8 @@ struct MovieListCell: View {
                     
                     HStack() {
                         Text("Year:")
-                            .fontWeight(.semibold)
-                            .font(.subheadline)
+                            .fontWeight(.bold)
+                            .font(.headline)
                             .lineLimit(1)
                             .foregroundColor(.white)
                         

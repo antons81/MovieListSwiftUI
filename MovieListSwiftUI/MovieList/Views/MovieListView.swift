@@ -24,7 +24,7 @@ struct MovieListView: View {
         }
         .searchable(text: $searchStr,
                     placement: .toolbar,
-                    prompt: "Enter movie name...")
+                    prompt: "Movie name...")
         .autocorrectionDisabled()
     }
 }
