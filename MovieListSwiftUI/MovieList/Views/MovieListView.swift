@@ -9,24 +9,26 @@ import SwiftUI
 
 struct MovieListView: View {
     
-    @StateObject var vm = MovieListViewModel()
+    @StateObject private var vm = MovieListViewModel()
+    @State private var searchStr = ""
+    
+    var filteredMovies: Movies {
+        guard let movies = vm.movies else { return Movies() }
+        guard !searchStr.isEmpty else { return movies }
+        return movies.filter { $0.title.localizedCaseInsensitiveContains(searchStr) }
+    }
     
     var body: some View {
         NavigationStack {
-            List {
-                if let movies = vm.movies {
-                    ForEach(movies) { movie in
-                        Text(movie.title)
-                    }
-                    .listRowSeparator(.hidden)
-                }
-            }
-            .scrollIndicators(.hidden)
-            .listStyle(.plain)
-            .navigationTitle(Text("Movie List"))
+            MovieList(movies: filteredMovies)
         }
+        .searchable(text: $searchStr,
+                    placement: .toolbar,
+                    prompt: "Enter movie name...")
+        .autocorrectionDisabled()
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

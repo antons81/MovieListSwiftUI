@@ -9,7 +9,7 @@ import Foundation
 
 typealias Movies = [MovieListModel]
 
-struct MovieListModel: Codable, Identifiable {
+struct MovieListModel: Codable, Identifiable, Hashable {
     let id: Int
     let title: String
     let overview: String

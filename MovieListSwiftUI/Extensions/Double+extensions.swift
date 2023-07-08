@@ -6,3 +6,14 @@
 //
 
 import Foundation
+
+extension Double {
+    
+    var formatDecimal: String {
+        return String(format: "%.01f", self)
+    }
+    
+    var format2Decimals: String {
+        return String(format: "%.02f", self)
+    }
+}
