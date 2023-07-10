@@ -9,7 +9,7 @@ import Foundation
 
 final class MovieListViewModel: ObservableObject {
     
-    @Published var movies: Movies?
+    @Published var movies: Movies = Movies()
     
     // MARK: - Private variables
     private let networkManager = NetworkManager()
@@ -24,8 +24,8 @@ final class MovieListViewModel: ObservableObject {
         do {
             let movies = try await networkManager.fetchTrendingMovies(model: Movies.self)
             self.movies = movies
-        } catch {
-            self.movies = nil
+        } catch let error {
+            print(error.localizedDescription)
         }
     }
 }

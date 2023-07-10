@@ -9,21 +9,20 @@ import SwiftUI
 
 struct MovieListView: View {
     
-    @StateObject private var vm = MovieListViewModel()
+    @StateObject var vm = MovieListViewModel()
     @State private var searchStr = ""
     
     var filteredMovies: Movies {
-        guard let movies = vm.movies else { return Movies() }
-        guard !searchStr.isEmpty else { return movies }
-        return movies.filter { $0.title.localizedCaseInsensitiveContains(searchStr) }
+        guard !searchStr.isEmpty else { return vm.movies }
+        return vm.movies.filter { $0.title.localizedCaseInsensitiveContains(searchStr) }
     }
     
     var body: some View {
         NavigationStack {
-            MovieList(movies: filteredMovies)
+            MovieList
         }
         .searchable(text: $searchStr,
-                    placement: .toolbar,
+                    placement: .automatic,
                     prompt: "Movie name...")
         .autocorrectionDisabled()
     }

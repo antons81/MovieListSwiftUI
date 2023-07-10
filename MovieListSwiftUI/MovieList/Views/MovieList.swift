@@ -7,18 +7,11 @@
 
 import SwiftUI
 
-
-struct MovieList: View {
+extension MovieListView {
     
-    private var movies: Movies
-    
-    init(movies: Movies) {
-        self.movies = movies
-    }
-    
-    var body: some View {
+    var MovieList: some View {
         List {
-            ForEach(movies, id: \.id) { movie in
+            ForEach(filteredMovies, id: \.id) { movie in
                 ZStack(alignment: .leading) {
                     NavigationLink(destination: MovieDetailView(id: movie.id)) {
                         EmptyView()
