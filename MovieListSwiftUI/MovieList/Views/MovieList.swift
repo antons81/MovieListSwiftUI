@@ -8,7 +8,6 @@
 import SwiftUI
 
 extension MovieListView {
-    
     var MovieList: some View {
         List {
             ForEach(filteredMovies, id: \.id) { movie in

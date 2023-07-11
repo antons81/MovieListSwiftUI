@@ -23,22 +23,18 @@ struct MovieDetailView: View {
     var body: some View {
         
         ZStack {
-            LinearGradient(colors: [.purple.opacity(0.5), .indigo],
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-            .edgesIgnoringSafeArea(.all)
             
+            gradientBackground
             
             VStack {
+                Spacer(minLength: UIScreen.main.bounds.height * 0.3)
+                showBackgroundView
                 Spacer()
-                ShowBackgroundView()
-            }.ignoresSafeArea(edges: .bottom)
+            }
             
-            
-            ZStack {
-                ShowData(vm: self.vm)
-                .padding(.trailing, 16)
-                .padding(.leading, 30)
+            VStack {
+                showImage
+                showData
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -52,7 +48,6 @@ struct MovieDetailView: View {
                         .fontWeight(.bold)
                         .font(.system(size: 25))
                 }
-                
             }
         })
         .onAppear {
@@ -63,88 +58,96 @@ struct MovieDetailView: View {
     }
 }
 
-struct ShowBackgroundView: View {
-    var body: some View {
-        Rectangle()
-            .foregroundColor(.white)
-            .cornerRadius(60)
-            .shadow(radius: 20)
-            .overlay (
-                RoundedRectangle(cornerRadius: 60)
-                    .stroke(.indigo.opacity(0.6), lineWidth: 0.5)
-            )
-            .frame(height: UIScreen.main.bounds.height * 0.7)
-    }
-}
 
-struct ShowData: View {
+// MARK: - COMPONENTS
+
+extension MovieDetailView {
     
-    private var vm: MovieDetailViewModel
-    
-    init(vm: MovieDetailViewModel) {
-        self.vm = vm
+    private var gradientBackground: some View {
+        LinearGradient(colors: [.purple.opacity(0.5), .indigo],
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+        .edgesIgnoringSafeArea(.all)
     }
     
-    var body: some View {
-        
-        VStack(alignment: .leading, spacing: 24) {
-            
+    private var showBackgroundView: some View {
+            Rectangle()
+                .foregroundColor(.white)
+                .cornerRadius(60)
+                .shadow(radius: 20)
+                .overlay (
+                    RoundedRectangle(cornerRadius: 60)
+                        .stroke(.indigo.opacity(0.6), lineWidth: 0.5)
+                )
+                .frame(height: UIScreen.main.bounds.height * 0.7)
+    }
+    
+    private var showImage: some View {
+        VStack {
             if let url = URL(string: vm.movie?.posterPath?.imageURL ?? "") {
                 AsyncImage(url: url) { image in
                     image
                         .resizable()
-                        .imageScale(.small)
-                        .scaledToFill()
-                        .cornerRadius(16)
-                        .shadow(radius: 10)
-                        .frame(width: 120, height: 140,
-                               alignment: .bottomLeading)
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.circular)
                 }
-                .offset(y: -UIScreen.main.bounds.height * 0.05)
+                .imageScale(.small)
+                .scaledToFill()
+                .cornerRadius(16)
+                .shadow(radius: 10)
+                .frame(width: 130, height: 180)
             }
-            
-            
-            Text(vm.movie?.title ?? "Title")
-                .font(.system(size: 24))
-                .fontWeight(.heavy)
-                .foregroundColor(.black)
-            
-            if let genres = vm.movie?.genres {
-                let genresString = genres.compactMap { $0.name }
-                let gens = genresString.joined(separator: ", ")
-                Text(gens)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.gray)
-            }
-            HStack {
-                Text(vm.movie?.releaseDate.stringToDate.dateToString(with: "dd MMMM YYYY") ?? "date")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.black)
-                
-                HStack {
-                    Spacer()
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.yellow)
-                    Text(vm.movie?.voteAverage.formatDecimal ?? "")
-                        .fontWeight(.semibold)
-                        .font(.subheadline)
-                        .lineLimit(3)
-                        .foregroundColor(.brown)
-                }
-                .padding(.horizontal, 8)
-            }
-            
-            Text(vm.movie?.overview ?? "Overview text")
-                .fontWeight(.regular)
-                .font(.system(size: 16))
-                .multilineTextAlignment(.leading)
-                .foregroundColor(.black.opacity(0.9))
         }
+        .padding(.vertical, 16)
+    }
+    
+    private var showData: some View {
+        
+            VStack(alignment: .leading) {
+                Text(vm.movie?.title ?? "Title")
+                    .font(.system(size: 24))
+                    .fontWeight(.heavy)
+                    .foregroundColor(.black)
+                    .padding(.bottom, 4)
+                
+                if let genres = vm.movie?.genres {
+                    let genresString = genres.compactMap { $0.name }
+                    let gens = genresString.joined(separator: ", ")
+                    Text(gens)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 20)
+                }
+                HStack {
+                    Text(vm.movie?.releaseDate.stringToDate.dateToString(with: "dd MMMM YYYY") ?? "date")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.black)
+                    
+                    HStack {
+                        Spacer()
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                        Text(vm.movie?.voteAverage.formatDecimal ?? "")
+                            .fontWeight(.semibold)
+                            .font(.subheadline)
+                            .lineLimit(3)
+                            .foregroundColor(.brown)
+                    }
+                    .padding(.horizontal, 8)
+                }
+                .padding(.bottom, 24)
+                
+                Text(vm.movie?.overview ?? "Overview text")
+                    .fontWeight(.regular)
+                    .font(.system(size: 16))
+                    .multilineTextAlignment(.leading)
+                    .foregroundColor(.black.opacity(0.9))
+                    .padding(.bottom, 20)
+            }
+            .padding(.horizontal, 28)
     }
 }
 
