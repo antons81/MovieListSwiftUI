@@ -10,6 +10,7 @@ import SwiftUI
 struct MovieListCell: View {
     
     private var movie: MovieListModel
+    @State private var startAnimation: Bool = false
     
     init(movie: MovieListModel) {
         self.movie = movie
@@ -27,6 +28,9 @@ struct MovieListCell: View {
             }
             .padding(.horizontal, 8)
         }
+        .opacity(startAnimation ? 1 : 0)
+        .animation(.linear(duration: 0.5), value: startAnimation)
+        .onAppear { startAnimation = true }
     }
 }
 
@@ -59,15 +63,14 @@ extension MovieListCell {
                         .resizable()
                         .imageScale(.small)
                         .frame(width: 100, height: 140, alignment: .bottomLeading)
-                        .aspectRatio(contentMode: .fit)
-                    
-                    
+                        .aspectRatio(contentMode: .fill)
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.circular)
                 }
                 .cornerRadius(10)
                 .shadow(radius: 10)
+                .clipped()
             }
         }
     }

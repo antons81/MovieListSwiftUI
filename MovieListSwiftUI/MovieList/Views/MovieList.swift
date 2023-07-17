@@ -8,16 +8,15 @@
 import SwiftUI
 
 extension MovieListView {
+    
     var MovieList: some View {
-        List {
-            ForEach(filteredMovies, id: \.id) { movie in
-                ZStack(alignment: .leading) {
-                    NavigationLink(destination: MovieDetailView(id: movie.id)) {
-                        EmptyView()
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    MovieListCell(movie: movie)
+        List(filteredMovies, id: \.id) { movie in
+            ZStack(alignment: .leading) {
+                NavigationLink(destination: MovieDetailView(id: movie.id)) {
+                    EmptyView()
                 }
+                .buttonStyle(PlainButtonStyle())
+                MovieListCell(movie: movie)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)

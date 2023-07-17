@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct MovieDetailView: View {
     
     @StateObject var vm = MovieDetailViewModel()
@@ -29,10 +27,9 @@ struct MovieDetailView: View {
             VStack {
                 Spacer(minLength: UIScreen.main.bounds.height * 0.3)
                 showBackgroundView
-                Spacer()
-            }
+            }.frame(alignment: .bottom)
             
-            VStack {
+            VStack(alignment: .center) {
                 showImage
                 showData
             }
@@ -73,11 +70,11 @@ extension MovieDetailView {
     private var showBackgroundView: some View {
             Rectangle()
                 .foregroundColor(.white)
-                .cornerRadius(60)
+                .clipShape(RoundedCorner(radius: 30, corners: [.topLeft, .topRight]))
                 .shadow(radius: 20)
                 .overlay (
-                    RoundedRectangle(cornerRadius: 60)
-                        .stroke(.indigo.opacity(0.6), lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(.indigo.opacity(0.5), lineWidth: 0.5)
                 )
                 .frame(height: UIScreen.main.bounds.height * 0.7)
     }
