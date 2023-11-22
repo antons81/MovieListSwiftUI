@@ -24,19 +24,20 @@ struct MovieDetailView: View {
             gradientBackground
             
             VStack {
-                Spacer()
+                Spacer().frame(maxWidth: .infinity)
                 showBackgroundView
             }
             .frame(alignment: .bottom)
             .edgesIgnoringSafeArea(.all)
             
             showImage
-                .offset(y: -180)
+                .offset(y: -(UIScreen.main.bounds.height * 0.7) / 4 - 90)
+                .padding(.bottom, 16)
+            
             
             ZStack {
                 VStack {
-                    showData
-                        .padding(.top, 150)
+                    showData.offset(y: 45)
                 }
             }
         }
@@ -89,13 +90,18 @@ extension MovieDetailView {
     private var showImage: some View {
         VStack {
             if let url = URL(string: vm.movie?.posterPath?.imageURL ?? "") {
-                AsyncImage(url: url) { image in
-                    image
-                    .resizable()
+                AsyncImage(url: url,
+                           transaction: Transaction(animation: .smooth)) { phase in
                     
-                } placeholder: {
-                    ProgressView()
-                        .progressViewStyle(.circular)
+                    switch phase {
+                    case .success(let image):
+                        image.resizable()
+                    case .empty:
+                        Image("movie_placeholder")
+                    case .failure(_):
+                        Image("movie_placeholder")
+                    @unknown default: EmptyView()
+                    }
                 }
                 .imageScale(.small)
                 .scaledToFill()
@@ -103,7 +109,7 @@ extension MovieDetailView {
                 .shadow(radius: 10)
                 .frame(width: 130, height: 180)
             } else {
-                Image("forest")
+                Image("movie_placeholder")
                     .resizable()
                     .imageScale(.small)
                     .scaledToFill()
@@ -111,7 +117,7 @@ extension MovieDetailView {
                     .shadow(radius: 10)
                     .frame(width: 130, height: 180)
             }
-        }.padding(.bottom, 32)
+        }
     }
     
     private var showData: some View {
@@ -121,7 +127,7 @@ extension MovieDetailView {
                 .font(.system(size: 24))
                 .fontWeight(.heavy)
                 .foregroundColor(.black)
-                .padding(.bottom, 4)
+                .padding(.bottom, 8)
             
             if let genres = vm.movie?.genres {
                 let genresString = genres.compactMap { $0.name }
@@ -138,6 +144,7 @@ extension MovieDetailView {
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .foregroundColor(.black)
+                    .padding(.bottom, 8)
                 
                 HStack {
                     Spacer()
@@ -151,7 +158,7 @@ extension MovieDetailView {
                 }
                 .padding(.horizontal, 8)
             }
-            .padding(.bottom, 18)
+            .padding(.bottom, 16)
             
             Text(vm.movie?.overview ?? "Overview text sfsfsfsdf dffdsfdf dsfsfsfsdfd fdsfdfdfsdf dffsdfsdfsd dsfdsfsdfdsfds dfsdfsdfds sdffdfsdfd")
                 .fontWeight(.regular)
@@ -159,7 +166,7 @@ extension MovieDetailView {
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.black.opacity(0.9))
                 .padding(.bottom, 16)
-        }.padding(.leading, 18).padding(.trailing, 18)
+        }.padding(.horizontal, 18)
     }
 }
 
